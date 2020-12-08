@@ -1,17 +1,32 @@
 /* app css stylesheet */
-
+.modal-backdrop {
+  visibility: hidden !important;
+}
+.modal-dialog {
+  margin: 0px !important;
+  width: 100vw !important;
+  height: 87% !important;
+}
 .jeopardy-board {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: #0015a0;
+  background: #060629;
   color: #ffffff;
-  font-family: 'Fjalla One', sans-serif;
-  text-shadow: 4px 4px #000000;
+  font-family: 'Bebas Neue', sans-serif;
+  text-shadow:
+    -5px -5px 0 #000,
+     0   -5px 0 #000,
+     5px -5px 0 #000,
+     5px  0   0 #000,
+     5px  5px 0 #000,
+     0    5px 0 #000,
+    -5px  5px 0 #000,
+    -5px  0   0 #000;
 }
 
 .jeopardy-board .board-row {
-  height: 16%;
+  height: 14.5%;
 }
 
 .jeopardy-board .fj-row {
@@ -23,11 +38,101 @@
 }
 
 .jeopardy-board .score-row {
-  height: 4%;
+  height: 13%;
   background: black;
-  font-size: 150%;
+  font-size: 250%;
+  display: grid;
+  grid-template-columns: 0px 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+.score-box {
+  display: grid;
+  grid-template-columns: 25px auto 25px;
+  background-color: #0E304C;
+}
+.score-box:first-of-type {
+  background-color: #4A0606;
+}
+.score-box:last-of-type {
+  background-color: #0B6E0D;
+}
+.score-box-buzzedin {
+  position: absolute;
+  width: 33.2vw;
+  height: 0%;
+  bottom: 0;
+  overflow: hidden;
+  background-color: red;
+  z-index: 1;
+  background: linear-gradient(179deg, #ff0000, #872f2f, #ff0000, #872f2f);
+  background-size: 800% 800%;
+  animation-fill-mode: forwards;
+  animation-iteration-count: 1;
+  -webkit-animation: AnimationName 5s linear;
+  animation: AnimationName 5s linear;
 }
 
+@-webkit-keyframes AnimationName {
+  0%{ 
+    background-position:50% 0%;
+    height: 13%;
+  }
+  50%{
+    background-position:50% 100%;
+  }
+  100%{
+    background-position:50% 0%;
+    /* height: 0%; */
+  }
+}
+@keyframes AnimationName {
+  0%{
+    background-position:50% 0%;
+    height: 13%;
+  }
+  50%{
+    background-position:50% 100%;
+  }
+  100%{
+    background-position:50% 0%;
+    /* height: 0%; */
+  }
+}
+.score-box-subdata {
+  display: flex;
+  flex-direction: column;
+  text-shadow: initial;
+  z-index: 3;
+}
+.score-box-subdata p {
+  line-height: 1.5em;
+  margin: 0px;
+}
+.score-box-subdata p:last-of-type {
+  line-height: .6em;
+  font-size: 200%;
+  color: white;
+}
+.control-arrow-left {
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 50px 0 50px 25px;
+  border-color: transparent transparent transparent #FFF;
+  z-index: 2;
+}
+.control-arrow-right {
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 50px 25px 50px 0;
+  border-color: transparent #FFF transparent transparent;
+  z-index: 2;
+}
 .jeopardy-board .board-cell {
   height: 100%;
   border: 3px solid black;
@@ -41,7 +146,7 @@
 }
 
 .jeopardy-board .category-cell {
-  font-size: 200%;
+  font-size: 250%;
 }
 
 .jeopardy-board .fj-cell {
@@ -50,11 +155,11 @@
 
 .jeopardy-board .fj-cell .player-name,
 .jeopardy-board .fj-cell .player-score {
-  font-size: 66.67%;
+  font-size: 250%;
 }
 
 .jeopardy-board .clue-cell {
-  color: #efaa50;
+  color: #fab300;
   font-size: 600%;
 }
 
@@ -64,7 +169,7 @@
 }
 
 .board-modal-open .modal-content {
-  background: #0015a0;
+  background: #060629;
   color: #ffffff;
   font-family: 'Korinna', 'Kadwa', serif;
   font-size: 400%;
@@ -98,12 +203,12 @@
 }
 
 .player-name {
-  font-family: 'Korinna', 'Kadwa', serif;
+  font-family: 'Bebas Neue', 'Kadwa', serif;
   text-transform: uppercase;
 }
 
 .player-score {
-  font-family: 'Fjalla One', sans-serif;
+  font-family: 'Bebas Neue', sans-serif;
 }
 
 .video-wrapper {

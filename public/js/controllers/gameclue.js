@@ -1,7 +1,12 @@
 'use strict';
 
 angular.module('myApp.controllers').
-  controller('GameClueCtrl', function ($scope, $modalInstance, response, socket) {
+  controller('GameClueCtrl', function ($scope, $modalInstance, response, socket, $timeout) {
+    $scope.buzzer = {
+      status: "close",
+      player: 0,
+      player_name: ""
+    }
     $scope.category = response.category;
     $scope.clue = response.clue;
     $scope.game = response.game;
@@ -11,6 +16,9 @@ angular.module('myApp.controllers').
       player_3: {},
       dd_player: response.game.control_player
     };
+    $scope.timer = {
+      time: 0
+    }
 
     var value = response.id.split('_');
     $scope.result.value = $scope.result.dd_value = parseInt(value[3]) * (value[1] === 'J' ? 200 : 400);
@@ -35,6 +43,51 @@ angular.module('myApp.controllers').
         }
       }
     };
+
+    socket.on('buzzer:status', function (data) {
+      console.log('buzzer:status');
+      $scope.buzzer.status = data;
+    });
+
+    function subtractTime() {
+      $scope.timer.time = ($scope.timer.time-1)
+    }
+    
+    function clearTime() {
+        $scope.timer.time = 0;
+    }
+    socket.on('buzzer:buzzin', function (data) {
+      console.log('buzzer:buzzin');
+      if($scope.buzzer.status = "open") {
+        $scope.buzzer.player = data;
+        $scope.buzzer.status = "close";
+        socket.emit('buzzer:status', 'close');
+        $scope.timer.time = 5;
+        $timeout(subtractTime,1000);
+        $timeout(subtractTime,2000);
+        $timeout(subtractTime,3000);
+        $timeout(subtractTime,4000);
+        $timeout(subtractTime,5000);
+        $timeout(clearTime,6000);
+      }
+    });
+
+    function runTimeout() {
+      if($scope.buzzer.player == 0) {
+        $scope.buzzer.status = "timeout";
+        socket.emit('buzzer:status', 'timeout');
+      }
+    }
+
+    $scope.setBuzzerStatus = function (sts) {
+      $scope.buzzer.status = sts;
+      console.log('e' + $scope.buzzer.status)
+      socket.emit('buzzer:status', sts);
+      if(sts = "open") {
+        $scope.buzzer.player == 0;
+        $timeout(runTimeout,5000)
+      }
+    }
 
     $scope.setDDValue = function () {
       $scope.result.value = parseInt($scope.result.dd_value);

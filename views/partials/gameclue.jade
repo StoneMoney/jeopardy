@@ -12,32 +12,45 @@
   h2.text-center(ng-show="clue.daily_double && !result.dd_confirm") 
     em Enter the player and wager below, then click Confirm.
 
-  .row(ng-if='!clue.daily_double')
-    each i in [1, 2, 3]
-      .col-md-4.text-center
-        h4 {{ game.player_#{i}.name || 'Player #{i}' }}
-        .btn-group
-          button.btn.btn-lg(ng-click='setResult(#{i}, false)', ng-class="{'btn-default':!result.player_#{i}.wrong, 'btn-danger':result.player_#{i}.wrong}")
-            span.glyphicon.glyphicon-remove
-          button.btn.btn-lg(ng-click='setResult(#{i}, true)', ng-class="{'btn-default':!result.player_#{i}.right, 'btn-success':result.player_#{i}.right}")
-            span.glyphicon.glyphicon-ok
-
+  .group(ng-if='!clue.daily_double')
+    .row.text-center
+      button.btn.btn-primary(ng-click='setBuzzerStatus("open")', ng-if='buzzer.status == "close"')
+          span Open Buzzers
+      button.btn.btn-warning(ng-if='buzzer.status == "open"')
+          span Buzzers Open
+      button.btn.btn-danger(ng-click='setBuzzerStatus("open")', ng-if='buzzer.status == "timeout"')
+          span Timeout (Click to reopen)
+    .row
+      each i in [1, 2, 3]
+        .col-md-4.text-center
+          h4 {{ game.player_#{i}.name || 'Player #{i}' }}
+          div(ng-if='buzzer.player == #{i}')
+            h3 Buzzed in... {{ timer.time }}
+          div(ng-if='buzzer.player == 0')
+            h3 Waiting...
+          div(ng-if='buzzer.player != #{i} && buzzer.player > 0')
+            h3 X
+          .btn-group
+            button.btn.btn-lg(ng-click='setResult(#{i}, false)', ng-class="{'btn-default':!result.player_#{i}.wrong, 'btn-danger':result.player_#{i}.wrong}")
+              span.glyphicon.glyphicon-remove
+            button.btn.btn-lg(ng-click='setResult(#{i}, true)', ng-class="{'btn-default':!result.player_#{i}.right, 'btn-success':result.player_#{i}.right}")
+              span.glyphicon.glyphicon-ok
   .row(ng-if='clue.daily_double')
-    .col-md-4.text-right
-      .btn-group
-        each i in [1, 2, 3]
-          label.btn.btn-primary(ng-model='result.dd_player', btn-radio="'player_#{i}'", ng-disabled='result.dd_confirm') {{ game.player_#{i}.name || 'Player #{i}' }}
-    .col-md-4
-      .input-group
-        span.input-group-addon $
-        input.form-control(type='number', ng-model='result.dd_value', ng-disabled='result.dd_confirm')
-    .col-md-4
-      .button.btn.btn-primary(type='button', ng-click='setDDValue()', ng-hide='result.dd_confirm') Confirm
-      .btn-group(ng-show='result.dd_confirm')
-        button.btn(ng-click='setDDResult(false)', ng-class="{'btn-default':result.dd_result == undefined || result.dd_result == true, 'btn-danger':result.dd_result == false}")
-          span.glyphicon.glyphicon-remove
-        button.btn(ng-click='setDDResult(true)', ng-class="{'btn-default':result.dd_result == undefined || result.dd_result == false, 'btn-success':result.dd_result == true}")
-          span.glyphicon.glyphicon-ok
+      .col-md-4.text-right
+        .btn-group
+          each i in [1, 2, 3]
+            label.btn.btn-primary(ng-model='result.dd_player', btn-radio="'player_#{i}'", ng-disabled='result.dd_confirm') {{ game.player_#{i}.name || 'Player #{i}' }}
+      .col-md-4
+        .input-group
+          span.input-group-addon $
+          input.form-control(type='number', ng-model='result.dd_value', ng-disabled='result.dd_confirm')
+      .col-md-4
+        .button.btn.btn-primary(type='button', ng-click='setDDValue()', ng-hide='result.dd_confirm') Confirm
+        .btn-group(ng-show='result.dd_confirm')
+          button.btn(ng-click='setDDResult(false)', ng-class="{'btn-default':result.dd_result == undefined || result.dd_result == true, 'btn-danger':result.dd_result == false}")
+            span.glyphicon.glyphicon-remove
+          button.btn(ng-click='setDDResult(true)', ng-class="{'btn-default':result.dd_result == undefined || result.dd_result == false, 'btn-success':result.dd_result == true}")
+            span.glyphicon.glyphicon-ok
 
 .modal-footer
   button.btn.btn-lg.btn-warning(type="button", ng-click="cancel()") Cancel

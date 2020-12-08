@@ -5,7 +5,6 @@
 var _ = require('lodash');
 var jsonfile = require('jsonfile');
 var id, datas = {};
-
 module.exports = function (io) {
   return function (socket) {
     socket.on('game:start', function (data) {
@@ -68,6 +67,16 @@ module.exports = function (io) {
       console.log('clue:end');
       datas[id].game = data;
       socket.broadcast.emit('clue:end', data);
+    });
+
+    socket.on('buzzer:status', function (data) {
+      console.log('buzzer:status');
+      socket.broadcast.emit('buzzer:status',data)
+    });
+
+    socket.on('buzzer:buzzin', function (data) {
+      console.log('buzzer:buzzin ' + data);
+      io.emit('buzzer:buzzin',data)
     });
   };
 };

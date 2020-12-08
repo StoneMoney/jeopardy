@@ -2,6 +2,12 @@
 
 angular.module('myApp.controllers').
   controller('BoardCtrl', function ($scope, $timeout, $modal, socket, currencyFilter) {
+    $scope.buzzer = {
+      player_1: false,
+      player_2: false,
+      player_3: false
+    };
+
     socket.emit('board:init');
 
     socket.on('board:init', function (data) {
@@ -97,4 +103,28 @@ angular.module('myApp.controllers').
         modalInstance.close();
       }
     });
+
+    function resetBuzzer() {
+      $scope.buzzer = {
+        player_1: false,
+        player_2: false,
+        player_3: false
+      };
+    }
+
+    socket.on('buzzer:buzzin', function (data) {
+      switch(parseInt(data)) {
+        case 1:
+          $scope.buzzer.player_1 = true;
+          break;
+        case 2:
+          $scope.buzzer.player_2 = true;
+          break;
+        case 3:
+          $scope.buzzer.player_3 = true;
+          break;
+      }
+      $timeout(resetBuzzer,5000);
+    });
+
   });

@@ -1,0 +1,16 @@
+.row
+    .text-center 
+        span Buzzer for player {{ player }}
+.row
+    .text-center
+        button.btn.btn-lg.btn-danger(ng-click='deny()', ng-if='buzzer.status == "close" && !timer.status', ng-disabled='buzzer.lockout')
+            span Please Wait...
+        button.btn.btn-lg.btn-success(ng-click='buzzin()', ng-if='buzzer.status == "open" && !timer.status', ng-disabled='buzzer.lockout')
+            span BUZZ IN!!!!!
+        button.btn.btn-lg.btn-warning(ng-click='deny()', ng-if='buzzer.status == "timeout" && !timer.status', ng-disabled='buzzer.lockout')
+            span Timeout
+        button.btn.btn-lg.btn-warning(ng-click='deny()', ng-if='timer.status', ng-disabled='buzzer.lockout')
+            span Answer Now
+.row(ng-show='timer.status')
+    .col.text-center
+        h1 {{ timer.time }}

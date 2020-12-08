@@ -49,6 +49,11 @@ config(function ($stateProvider, $urlRouterProvider) {
         }
       }
     }).
+    state('buzzer', {
+      url: '/buzzers/:id',
+      templateUrl: 'partials/buzzer',
+      controller: 'BuzzerCtrl',
+    }).
     state('board', {
       url: '/board',
       templateUrl: 'partials/board',
