@@ -7,6 +7,7 @@ angular.module('myApp.controllers').
       player: 0,
       player_name: ""
     }
+    $scope.music = false;
     $scope.category = response.category;
     $scope.clue = response.clue;
     $scope.game = response.game;
@@ -19,9 +20,9 @@ angular.module('myApp.controllers').
     $scope.timer = {
       time: 0
     }
-
     var value = response.id.split('_');
     $scope.result.value = $scope.result.dd_value = parseInt(value[3]) * (value[1] === 'J' ? 200 : 400);
+    $scope.round = value[1];
 
     $scope.setResult = function (num, correct) {
       var key = 'player_' + num;
@@ -101,6 +102,25 @@ angular.module('myApp.controllers').
       $scope.result.dd_result = correct;
     };
 
+    $scope.startFJMusic = function () {
+      $scope.music = true;
+      console.log('music:start start');
+      socket.emit('music:start', "yes");
+    };
+
+    $scope.stopFJMusic = function () {
+      $scope.music = false;
+      console.log('music:start stop');
+      socket.emit('music:start', "no");
+    };
+
+    socket.on('buzzer:fjresponse', function (data) {
+      if($scope.game.round == 'FJ') {
+        var fullData = data.split(" || ")
+        document.getElementById(fullData[0]+'response').innerText = fullData[1]
+      }
+    });
+
     $scope.ok = function () {
       var result = {};
       if ($scope.clue.daily_double) {
@@ -113,5 +133,6 @@ angular.module('myApp.controllers').
 
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
+      socket.emit('music:start', false);
     };
   });

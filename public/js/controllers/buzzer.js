@@ -12,9 +12,15 @@ angular.module('myApp.controllers').
         status: false,
         time: 0
     }
-
-    function unsetLockout() {
+    $scope.fj = {
+        wager: false,
+        thinking: false
+    }
+    function unsetLockout(apply) {
         $scope.buzzer.lockout = false;
+        if(apply) {
+            $scope.$apply();
+        }
     }
 
     function subtractTime() {
@@ -46,13 +52,52 @@ angular.module('myApp.controllers').
         $scope.buzzer.status = data;
     });
 
-    $scope.deny = function () {
+    socket.on('open:wagers', function(data) {
+        console.log('open wagers' + data)
+        $scope.fj.wager = true;
+    })
+
+    socket.on('music:start', function(data) {
+        if(data === "yes") {
+            $scope.fj.wager = false;
+            $scope.fj.thinking = true;
+        } else {
+            $scope.fj.thinking = false;
+            socket.emit("buzzer:fjresponse", $scope.player + " || " + document.getElementById('fjresponse').value)
+        }
+
+    })
+
+    function deny(apl) {
         $scope.buzzer.lockout = true;
+        if(apl) {
+            $scope.$apply();
+        }
         $timeout(unsetLockout,300);
     }
 
-    $scope.buzzin = function () {
+    function approve() {
       socket.emit('buzzer:buzzin', $scope.player);
     }
 
+    $scope.wager = function () {
+        $scope.fj.wager = false
+        socket.emit("buzzer:fjwager", $scope.player + " || " + document.getElementById('fjwager').value)
+    }
+
+    $scope.buzzin = function (apl) {
+        if($scope.buzzer.status == 'open') {
+            approve();
+        } else {
+            deny(apl);
+        }
+    }
+
+    document.addEventListener('keydown', logKey);
+
+    function logKey(e) {
+        if((e.code == "Space" || e.code == "Enter") && !$scope.buzzer.lockout) {
+            $scope.buzzin(true);
+        }
+    }
   });

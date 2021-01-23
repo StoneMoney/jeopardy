@@ -1,16 +1,35 @@
-.row
-    .text-center 
-        span Buzzer for player {{ player }}
-.row
-    .text-center
-        button.btn.btn-lg.btn-danger(ng-click='deny()', ng-if='buzzer.status == "close" && !timer.status', ng-disabled='buzzer.lockout')
-            span Please Wait...
-        button.btn.btn-lg.btn-success(ng-click='buzzin()', ng-if='buzzer.status == "open" && !timer.status', ng-disabled='buzzer.lockout')
-            span BUZZ IN!!!!!
-        button.btn.btn-lg.btn-warning(ng-click='deny()', ng-if='buzzer.status == "timeout" && !timer.status', ng-disabled='buzzer.lockout')
-            span Timeout
-        button.btn.btn-lg.btn-warning(ng-click='deny()', ng-if='timer.status', ng-disabled='buzzer.lockout')
-            span Answer Now
-.row(ng-show='timer.status')
+.row(ng-show='!fj.thinking')
+    .row
+        .text-center 
+            p Buzzer for player {{ player }}
+            p Button opens for 5 seconds when the hosts finishes reading the clue, nobody buzzing in after 5s results in a "timeout"
+            p First person to buzz in gets 5 seconds to answer the prompt, which starts IMMEDIATELY after buzzing in
+            p Clicking the buzzer BEFORE the host opens it will result in a .3s timeout where you cannot click it again
+            p Alternatively to clicking the buzzer, you can press SPACEBAR or ENTER (Window must be focused)
+    .row
+        .text-center
+            button.btn.btn-lg.btn-danger(ng-click='buzzin()', ng-if='buzzer.status == "close" && !timer.status', ng-disabled='buzzer.lockout')
+                span Please Wait...
+            button.btn.btn-lg.btn-success(ng-click='buzzin()', ng-if='buzzer.status == "open" && !timer.status', ng-disabled='buzzer.lockout')
+                span BUZZ IN!!!!!
+            button.btn.btn-lg.btn-warning(ng-click='buzzin()', ng-if='buzzer.status == "timeout" && !timer.status', ng-disabled='buzzer.lockout')
+                span Timeout
+            button.btn.btn-lg.btn-warning(ng-click='buzzin()', ng-if='timer.status', ng-disabled='buzzer.lockout')
+                span Answer Now
+    .row(ng-show='buzzer.lockout')
+        .col.text-center
+            span Locked
+    .row(ng-show='timer.status')
+        .col.text-center
+            h1 {{ timer.time }}
+.row(ng-show='fj.wager')
     .col.text-center
-        h1 {{ timer.time }}
+        p Enter your FINAL JEOPARDY wager
+        input#fjwager(type="number")
+        button.btn.btn-lg.btn-warning(ng-click="wager()")
+            span Send Wager
+.row(ng-show='fj.thinking')
+    .col.text-center
+        p Enter your FINAL JEOPARDY response
+        input#fjresponse(type="text")
+        p Whatever is in the box when the time runs out will be submitted

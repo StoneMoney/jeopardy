@@ -155,7 +155,7 @@
 
 .jeopardy-board .fj-cell .player-name,
 .jeopardy-board .fj-cell .player-score {
-  font-size: 250%;
+  /* font-size: 250%; */
 }
 
 .jeopardy-board .clue-cell {

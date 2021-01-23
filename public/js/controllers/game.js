@@ -19,6 +19,13 @@ angular.module('myApp.controllers').
       $scope.game = data.game;
     });
 
+    socket.on('buzzer:fjwager', function (data) {
+      if($scope.game.round == 'FJ') {
+        var fullData = data.split(" || ")
+        document.getElementById(fullData[0]+'wager').value = fullData[1]
+      }
+    });
+
     $scope.startGame = function () {
       console.log('game:start emit');
       socket.emit('game:start', {

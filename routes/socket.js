@@ -32,6 +32,8 @@ module.exports = function (io) {
       else if (data.round === 'DJ') {
         data.round = 'FJ';
         data.control_player = undefined;
+        console.log("open wagers :)")
+        io.emit('open:wagers','true');
       }
       else if (data.round === 'FJ') {
         data.round = 'end';
@@ -78,5 +80,21 @@ module.exports = function (io) {
       console.log('buzzer:buzzin ' + data);
       io.emit('buzzer:buzzin',data)
     });
+
+    socket.on('buzzer:fjwager', function (data) {
+      console.log('buzzer:fjwager ' + data);
+      io.emit('buzzer:fjwager',data)
+    });
+    
+    socket.on('buzzer:fjresponse', function (data) {
+      console.log('buzzer:fjresponse ' + data);
+      io.emit('buzzer:fjresponse',data)
+    });
+
+    socket.on('music:start', function(data) {
+      console.log("music:start " + data);
+      io.emit('music:start', data);
+    });
+
   };
 };

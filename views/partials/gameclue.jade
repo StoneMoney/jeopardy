@@ -13,13 +13,18 @@
     em Enter the player and wager below, then click Confirm.
 
   .group(ng-if='!clue.daily_double')
-    .row.text-center
+    .row.text-center(ng-if='round != "FJ"')
       button.btn.btn-primary(ng-click='setBuzzerStatus("open")', ng-if='buzzer.status == "close"')
           span Open Buzzers
       button.btn.btn-warning(ng-if='buzzer.status == "open"')
           span Buzzers Open
       button.btn.btn-danger(ng-click='setBuzzerStatus("open")', ng-if='buzzer.status == "timeout"')
           span Timeout (Click to reopen)
+    .row.text-center(ng-if='round == "FJ"')
+      button.btn.btn-primary(ng-click='startFJMusic()', ng-if='!music')
+          span Start Music and Open Responses
+      button.btn.btn-danger(ng-click='stopFJMusic()',ng-if='music')
+          span Stop Music and Close Responses
     .row
       each i in [1, 2, 3]
         .col-md-4.text-center
@@ -27,7 +32,9 @@
           div(ng-if='buzzer.player == #{i}')
             h3 Buzzed in... {{ timer.time }}
           div(ng-if='buzzer.player == 0')
-            h3 Waiting...
+            h3(ng-if='round != "FJ"') Waiting...
+            .row.text-center(ng-if='round == "FJ"')
+              h3(id="#{i}response") Waiting to close...
           div(ng-if='buzzer.player != #{i} && buzzer.player > 0')
             h3 X
           .btn-group

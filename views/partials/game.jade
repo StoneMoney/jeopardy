@@ -88,7 +88,7 @@ nav.navbar.navbar-default.navbar-fixed-top
               h4 {{ game.player_#{i}.name || 'Player #{i}' }}
               .input-group
                 .input-group-addon $
-                input.form-control(type='number', ng-model='game.player_#{i}.fj_wager')
+                input(id="#{i}wager").form-control(type='number', ng-model='game.player_#{i}.fj_wager')
         br
         .row
           .col-md-12.text-center
